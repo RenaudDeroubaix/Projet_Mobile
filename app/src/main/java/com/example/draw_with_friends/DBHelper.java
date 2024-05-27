@@ -4,8 +4,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.content.ContentValues;
-
-
+import java.util.ArrayList;
+import java.util.List;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -41,7 +42,59 @@ public class DBHelper extends SQLiteOpenHelper {
         // Créez votre table d'utilisateurs lors de la création de la base de données
         String createUserTableQuery = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)";
         db.execSQL(createUserTableQuery);
+
+        // Créez votre table de dessins
+        String createDrawingTableQuery = "CREATE TABLE drawings (id INTEGER PRIMARY KEY AUTOINCREMENT, drawing_data TEXT)";
+        db.execSQL(createDrawingTableQuery);
+
     }
+
+    public long insertDrawing(String drawingData) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("drawing_data", drawingData);
+        long newRowId = db.insert("drawings", null, values);
+        db.close();
+        return newRowId;
+    }
+
+    public List<String> getAllDrawings() {
+        List<String> drawings = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT drawing_data FROM drawings", null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex("drawing_data");
+            if (columnIndex != -1) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        String drawingData = cursor.getString(columnIndex);
+                        drawings.add(drawingData);
+                    } while (cursor.moveToNext());
+                }
+            } else {
+                System.out.println("La colonne 'drawing_data' n'existe pas dans le curseur.");
+                System.err.println("La colonne 'drawing_data' n'existe pas dans le curseur.");
+            }
+            cursor.close();
+        }
+        db.close();
+        return drawings;
+    }
+    public String getDrawingDataByName(String drawingName) {
+        String drawingData = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("drawings", null, "name = ?", new String[]{drawingName}, null, null, null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex("drawing_data");
+            if (columnIndex != -1) {
+                drawingData = cursor.getString(cursor.getColumnIndex("drawing_data"));
+            }cursor.close();
+        }
+
+        db.close();
+        return drawingData;
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -59,4 +112,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return newRowId;
     }
+
+
 }

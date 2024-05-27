@@ -26,6 +26,7 @@ public class AcceuilLayoutActivity extends AppCompatActivity{
         });
         Button buttonGallerie = findViewById(R.id.buttonGallerie);
         buttonGallerie.setOnClickListener(v -> {
+
             // Naviguer vers la nouvelle activité ConnectionLayoutActivity
             Intent intent = new Intent(AcceuilLayoutActivity.this, GallerieLayoutActivity.class);
             startActivity(intent);

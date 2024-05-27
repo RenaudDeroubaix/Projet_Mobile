@@ -12,7 +12,12 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class CanvasView extends View {
+
+    private DBHelper dbHelper;
+
     private Paint paint;
     private Path path;
 
@@ -29,6 +34,7 @@ public class CanvasView extends View {
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        dbHelper = new DBHelper(context);
         init();
     }
     public void setDrawingColor(int color) {
@@ -93,6 +99,13 @@ public class CanvasView extends View {
                 // Réinitialise le chemin pour le prochain tracé
                 path.lineTo(lastX, lastY);
                 paths.add(new Pair<>(new Path(path), currentColor));
+
+                // Convertir le chemin (Path) en une chaîne de données
+                String drawingData = pathToString(path);
+
+                // Insérer les données du dessin dans la base de données
+
+                dbHelper.insertDrawing( drawingData);
                 path = null;
                 break;
             default:
@@ -102,6 +115,53 @@ public class CanvasView extends View {
         invalidate();
         return true;
     }
+    public void setDrawingData(String drawingData) {
+        // Efface les dessins précédents
+        paths.clear();
+
+        // Crée un nouveau chemin à partir des données du dessin
+        path = stringToPath(drawingData);
+
+        // Ajoute le chemin à la liste de dessins
+        if (path != null) {
+            paths.add(new Pair<>(new Path(path), currentColor));
+        }
+
+        // Force le redessin de la vue
+        invalidate();
+    }
+
+    private Path stringToPath(String drawingData) {
+        Path path = new Path();
+        String[] segments = drawingData.split(" "); // Divise la chaîne en segments basés sur les espaces
+        for (int i = 0; i < segments.length; i++) {
+            String segment = segments[i];
+            char command = segment.charAt(0); // La première lettre du segment est la commande de tracé
+            switch (command) {
+                case 'M': // Déplacement absolu
+                    String[] coordinates = segment.substring(1).split(","); // Coordonnées x,y sans le M
+                    float x = Float.parseFloat(coordinates[0]);
+                    float y = Float.parseFloat(coordinates[1]);
+                    path.moveTo(x, y);
+                    break;
+                case 'L': // Ligne absolu
+                    String[] lineCoords = segment.substring(1).split(","); // Coordonnées x,y sans le L
+                    float endX = Float.parseFloat(lineCoords[0]);
+                    float endY = Float.parseFloat(lineCoords[1]);
+                    path.lineTo(endX, endY);
+                    break;
+                // Ajoute d'autres cas pour d'autres commandes de tracé si nécessaire
+            }
+        }
+        return path;
+    }
+
+
+
+    private String pathToString(Path path) {
+        return path.toString();
+    }
+
 
 }
 

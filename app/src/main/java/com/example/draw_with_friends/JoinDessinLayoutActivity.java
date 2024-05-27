@@ -15,6 +15,13 @@ public class JoinDessinLayoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joindessin);
+        Button buttonGallery = findViewById(R.id.buttonGallery);
+        buttonGallery.setOnClickListener(v -> {
+            // Naviguer vers l'activité GallerieLayoutActivity
+            Intent intent = new Intent(JoinDessinLayoutActivity.this, GallerieLayoutActivity.class);
+            startActivity(intent);
+        });
+
         Button buttonCanva = findViewById(R.id.buttonNouveauDessin);
         buttonCanva.setOnClickListener(v -> {
             // Naviguer vers la nouvelle activité ConnectionLayoutActivity

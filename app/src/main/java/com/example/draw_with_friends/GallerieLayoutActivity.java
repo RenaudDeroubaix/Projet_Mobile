@@ -2,19 +2,31 @@ package com.example.draw_with_friends;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import android.widget.Button;
-import android.content.Intent;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+
+
 public class GallerieLayoutActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private DrawingAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acceuil);
+        setContentView(R.layout.activity_gallerie);
 
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Récupérer la liste des noms de dessins depuis la base de données
+        DBHelper dbHelper = new DBHelper(this);
+        List<String> drawingNames = dbHelper.getAllDrawings();
+
+        adapter = new DrawingAdapter(drawingNames);
+        recyclerView.setAdapter(adapter);
     }
 }
+

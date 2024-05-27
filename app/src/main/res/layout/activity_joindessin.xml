@@ -17,9 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Title Box -->
 
-    <!-- Title Text -->
+    <Button
+        android:id="@+id/buttonGallery"
+        android:layout_width="255dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="76dp"
+        android:background="#457b9d"
+        android:text="Dessin en cours"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNouveauDessin"
+        app:layout_constraintStart_toStartOf="@+id/background" />
 
     <View
         android:id="@+id/titleBox"
@@ -46,13 +55,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/titleBox"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
-
-    <!-- Buttons and TextFields -->
-    <!-- You can use buttons and text fields here -->
-
-    <!-- Example Button -->
-
-    <!-- Example TextField -->
 
     <Button
         android:id="@+id/buttonNouveauDessin"
