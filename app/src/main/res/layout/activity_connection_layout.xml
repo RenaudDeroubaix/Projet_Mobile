@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8AEEE8">
+
+    <!-- Connection Box -->
+
+    <!-- Inscription Box -->
+    <LinearLayout
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="28dp"
+        android:orientation="vertical"
+        android:background="#8AEEE8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Connection Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Connection"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:background="@drawable/red_border" />/>
+
+        <!-- Email TextField -->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Email or Username"
+            android:inputType="textEmailAddress"
+            android:id="@+id/emailEditTextConnection"
+            android:textColorHint="#666666"
+            android:textColor="#000000"
+            android:background="#D9D9D9"/>/>
+
+        <!-- Password TextField -->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Mot de passe"
+            android:inputType="textPassword"
+            android:id="@+id/passwordEditTextConnection"
+            android:textColorHint="#666666"
+            android:textColor="#000000"
+            android:background="#D9D9D9"/>/>
+
+        <!-- Connect Button -->
+        <Button
+            android:id="@+id/connectionBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Se connecter"
+            android:backgroundTint="#FFEA7D"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="128dp"
+        android:orientation="vertical"
+        android:background="#8AEEE8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Inscription Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Inscription"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:background="@drawable/red_border"/>
+
+        <!-- Email TextField -->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Email or Username"
+            android:inputType="textEmailAddress"
+            android:id="@+id/emailEditText"
+            android:textColorHint="#666666"
+            android:textColor="#000000"
+            android:background="#D9D9D9"/>
+
+        <!-- Password TextField -->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Mot de passe"
+            android:inputType="textPassword"
+            android:id="@+id/passwordEditText"
+            android:background="#D9D9D9"
+            android:textColor="#000000"
+            android:textColorHint="#666666" />
+
+        <!-- Inscrire Button -->
+        <Button
+            android:id="@+id/inscriptionBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S'inscrire"
+            android:backgroundTint="#FFEA7D"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

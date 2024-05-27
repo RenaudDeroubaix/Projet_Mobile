@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Box with background color -->
+    <View
+        android:id="@+id/background"
+        android:layout_width="360dp"
+        android:layout_height="800dp"
+        android:background="#e129b9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Box for text "Galerie" -->
+    <View
+        android:id="@+id/textBackground"
+        android:layout_width="290dp"
+        android:layout_height="160dp"
+        android:background="#78c66c"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toTopOf="@+id/background"
+        app:layout_constraintVertical_bias="0.052" />
+
+    <TextView
+        android:id="@+id/textGalerie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Galerie"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/textBackground"
+        app:layout_constraintTop_toTopOf="@+id/textBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/textBackground"
+        app:layout_constraintEnd_toEndOf="@+id/textBackground"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!-- Button for dessin #1 -->
+
+    <!-- Button for dessin #2 -->
+
+    <!-- Button for dessin #3 -->
+
+    <!-- Button for dessin #4 -->
+    <Button
+        android:id="@+id/buttonDessin1"
+        android:layout_width="135dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="204dp"
+        android:background="#FFFFFF"
+        android:text="dessin #1"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toTopOf="@+id/background" />
+
+    <Button
+        android:id="@+id/buttonDessin2"
+        android:layout_width="135dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="204dp"
+        android:background="#FFFFFF"
+        android:text="dessin #2"
+        android:textColor="#000000"
+        app:layout_constraintStart_toEndOf="@+id/buttonDessin1"
+        app:layout_constraintTop_toTopOf="@+id/background" />
+
+    <Button
+        android:id="@+id/buttonDessin3"
+        android:layout_width="135dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        android:text="dessin #3"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDessin1" />
+
+    <Button
+        android:id="@+id/buttonDessin4"
+        android:layout_width="135dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        android:text="dessin #4"
+        android:textColor="#000000"
+        app:layout_constraintStart_toEndOf="@+id/buttonDessin3"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDessin2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

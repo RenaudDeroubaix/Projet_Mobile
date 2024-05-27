@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background -->
+    <View
+        android:id="@+id/background"
+        android:layout_width="360dp"
+        android:layout_height="800dp"
+        android:background="#c3b426"
+        android:alpha="0.71"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Title Box -->
+
+    <!-- Title Text -->
+
+    <View
+        android:id="@+id/titleBox"
+        android:layout_width="340dp"
+        android:layout_height="198dp"
+        android:alpha="0.79"
+        android:background="#78c66c"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNouveauDessin"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toTopOf="@+id/background" />
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Draw with FRIENDS"
+        android:textColor="#ffe500"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@+id/titleBox"
+        app:layout_constraintStart_toStartOf="@+id/titleBox"
+        app:layout_constraintEnd_toEndOf="@+id/titleBox"
+        app:layout_constraintBottom_toBottomOf="@+id/titleBox"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!-- Buttons and TextFields -->
+    <!-- You can use buttons and text fields here -->
+
+    <!-- Example Button -->
+
+    <!-- Example TextField -->
+
+    <Button
+        android:id="@+id/buttonNouveauDessin"
+        android:layout_width="255dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="348dp"
+        android:background="#cb3030"
+        android:text="Nouveau dessin"
+        android:textColor="#7c92e1"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toBottomOf="@+id/titleBox" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="255dp"
+        android:layout_height="66dp"
+        android:background="#d8d8d8"
+        android:hint="Description"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@+id/buttonNouveauDessin"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="@+id/background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
