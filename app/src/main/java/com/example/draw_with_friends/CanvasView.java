@@ -8,160 +8,114 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class CanvasView extends View {
-
-    private DBHelper dbHelper;
 
     private Paint paint;
     private Path path;
-
-    private List<Pair<Path, Integer>> paths = new ArrayList<>();
-
-    private int currentColor = Color.BLACK;
-    private float lastX = 0;
-    private float lastY = 0;
-    private static final float TOUCH_TOLERANCE = 4;
-
-
-
-
+    private List<Path> paths;
+    private List<Integer> colors;
+    private int currentColor;
+    private String drawingName;
+    private DBHelper dbHelper;
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        dbHelper = new DBHelper(context);
-        init();
-    }
-    public void setDrawingColor(int color) {
-        this.currentColor = color;
-        paint.setColor(color);
-    }
-    public int getDrawingColor() {
-        return currentColor;
+        init(context);
     }
 
-
-
-
-    private void init() {
+    private void init(Context context) {
         paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(10f);
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5);
-        paint.setAntiAlias(true);
+        paint.setStrokeJoin(Paint.Join.ROUND);
 
         path = new Path();
+        paths = new ArrayList<>();
+        colors = new ArrayList<>();
+        currentColor = paint.getColor();
+
+        dbHelper = new DBHelper(context);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        for (Pair<Path, Integer> pair : paths) {
-            paint.setColor(pair.second);
-            canvas.drawPath(pair.first, paint);
+        for (int i = 0; i < paths.size(); i++) {
+            paint.setColor(colors.get(i));
+            canvas.drawPath(paths.get(i), paint);
         }
-        if (path != null) {
-            canvas.drawPath(path, paint);
-        }
+        paint.setColor(currentColor);
+        canvas.drawPath(path, paint);
     }
-
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float touchX = event.getX();
-        float touchY = event.getY();
+        float x = event.getX();
+        float y = event.getY();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                path = new Path();
-                path.moveTo(touchX, touchY);
-                lastX = touchX;
-                lastY = touchY;
+                path.moveTo(x, y);
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(touchX - lastX);
-                float dy = Math.abs(touchY - lastY);
-                if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                    path.quadTo(lastX, lastY, (touchX + lastX) / 2, (touchY + lastY) / 2);
-                    lastX = touchX;
-                    lastY = touchY;
-                    // Ajoute le chemin avec la couleur actuelle à la liste
-                    paths.add(new Pair<>(new Path(path), currentColor));
-                }
+                path.lineTo(x, y);
+                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                // Réinitialise le chemin pour le prochain tracé
-                path.lineTo(lastX, lastY);
-                paths.add(new Pair<>(new Path(path), currentColor));
-
-                // Convertir le chemin (Path) en une chaîne de données
-                String drawingData = pathToString(path);
-
-                // Insérer les données du dessin dans la base de données
-
-                dbHelper.insertDrawing( drawingData);
-                path = null;
+                paths.add(new Path(path));
+                colors.add(currentColor);
+                path.reset();
+                saveCurrentDrawing();
+                invalidate();
                 break;
             default:
                 return false;
         }
-
-        invalidate();
         return true;
     }
-    public void setDrawingData(String drawingData) {
-        // Efface les dessins précédents
-        paths.clear();
 
-        // Crée un nouveau chemin à partir des données du dessin
-        path = stringToPath(drawingData);
+    public void setDrawingName(String drawingName) {
+        this.drawingName = drawingName;
+    }
 
-        // Ajoute le chemin à la liste de dessins
-        if (path != null) {
-            paths.add(new Pair<>(new Path(path), currentColor));
+    public void setDrawingColor(int color) {
+        currentColor = color;
+    }
+
+    private void saveCurrentDrawing() {
+        if (drawingName != null && !drawingName.isEmpty()) {
+            String drawingData = getDrawingData();
+            dbHelper.insertDrawing(drawingName, drawingData);
         }
+    }
 
-        // Force le redessin de la vue
+    public String getDrawingData() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < paths.size(); i++) {
+            stringBuilder.append(paths.get(i).toString()).append(",");
+            stringBuilder.append(colors.get(i)).append(";");
+        }
+        return stringBuilder.toString();
+    }
+
+    public void setDrawingData(String drawingData) {
+        paths.clear();
+        colors.clear();
+        String[] data = drawingData.split(";");
+        for (String d : data) {
+            String[] parts = d.split(",");
+            Path p = new Path();
+            // Convert parts[0] back to a Path object (this is just a placeholder)
+            paths.add(p);
+            colors.add(Integer.parseInt(parts[1]));
+        }
         invalidate();
     }
-
-    private Path stringToPath(String drawingData) {
-        Path path = new Path();
-        String[] segments = drawingData.split(" "); // Divise la chaîne en segments basés sur les espaces
-        for (int i = 0; i < segments.length; i++) {
-            String segment = segments[i];
-            char command = segment.charAt(0); // La première lettre du segment est la commande de tracé
-            switch (command) {
-                case 'M': // Déplacement absolu
-                    String[] coordinates = segment.substring(1).split(","); // Coordonnées x,y sans le M
-                    float x = Float.parseFloat(coordinates[0]);
-                    float y = Float.parseFloat(coordinates[1]);
-                    path.moveTo(x, y);
-                    break;
-                case 'L': // Ligne absolu
-                    String[] lineCoords = segment.substring(1).split(","); // Coordonnées x,y sans le L
-                    float endX = Float.parseFloat(lineCoords[0]);
-                    float endY = Float.parseFloat(lineCoords[1]);
-                    path.lineTo(endX, endY);
-                    break;
-                // Ajoute d'autres cas pour d'autres commandes de tracé si nécessaire
-            }
-        }
-        return path;
-    }
-
-
-
-    private String pathToString(Path path) {
-        return path.toString();
-    }
-
-
 }
-

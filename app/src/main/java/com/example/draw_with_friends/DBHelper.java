@@ -39,24 +39,26 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Créez votre table d'utilisateurs lors de la création de la base de données
         String createUserTableQuery = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)";
         db.execSQL(createUserTableQuery);
 
-        // Créez votre table de dessins
-        String createDrawingTableQuery = "CREATE TABLE drawings (id INTEGER PRIMARY KEY AUTOINCREMENT, drawing_data TEXT)";
+        // Ajoutez une colonne pour le nom du dessin
+        String createDrawingTableQuery = "CREATE TABLE drawings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, drawing_data TEXT)";
         db.execSQL(createDrawingTableQuery);
-
     }
 
-    public long insertDrawing(String drawingData) {
+
+    public long insertDrawing(String name, String drawingData) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("name", name);  // Ajoutez le nom du dessin
         values.put("drawing_data", drawingData);
         long newRowId = db.insert("drawings", null, values);
         db.close();
         return newRowId;
     }
+
+
 
     public List<String> getAllDrawings() {
         List<String> drawings = new ArrayList<>();
@@ -112,6 +114,27 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return newRowId;
     }
+
+    public List<String> getAllDrawingNames() {
+        List<String> drawingNames = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT name FROM drawings", null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex("name");
+            if (columnIndex != -1) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        String name = cursor.getString(columnIndex);
+                        drawingNames.add(name);
+                    } while (cursor.moveToNext());
+                }
+            }
+            cursor.close();
+        }
+        db.close();
+        return drawingNames;
+    }
+
 
 
 }

@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
     <Button
         android:id="@+id/buttonGallery"
         android:layout_width="255dp"
@@ -70,13 +69,13 @@
         app:layout_constraintTop_toBottomOf="@+id/titleBox" />
 
     <EditText
-        android:id="@+id/editTextDescription"
+        android:id="@+id/editTextDrawingName"
         android:layout_width="255dp"
         android:layout_height="66dp"
         android:background="#d8d8d8"
-        android:hint="Description"
+        android:hint="Nom du dessin"
         android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@+id/buttonNouveauDessin"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNouveauDessin"
         app:layout_constraintStart_toStartOf="@+id/background"
         app:layout_constraintEnd_toEndOf="@+id/background" />
 

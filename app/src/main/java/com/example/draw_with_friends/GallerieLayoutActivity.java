@@ -21,12 +21,12 @@ public class GallerieLayoutActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Récupérer la liste des noms de dessins depuis la base de données
         DBHelper dbHelper = new DBHelper(this);
-        List<String> drawingNames = dbHelper.getAllDrawings();
+        List<String> drawingNames = dbHelper.getAllDrawingNames();
 
         adapter = new DrawingAdapter(drawingNames);
         recyclerView.setAdapter(adapter);
     }
 }
+
 

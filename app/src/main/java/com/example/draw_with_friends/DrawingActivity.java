@@ -17,17 +17,17 @@ public class DrawingActivity extends AppCompatActivity {
 
         canvasView = findViewById(R.id.canvasView);
 
-        // Récupérer le nom du dessin sélectionné depuis l'intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("drawingName")) {
             String drawingName = intent.getStringExtra("drawingName");
 
-            // Récupérer les données du dessin depuis la base de données en fonction du nom du dessin
             DBHelper dbHelper = new DBHelper(this);
             String drawingData = dbHelper.getDrawingDataByName(drawingName);
 
-            // Afficher le dessin dans CanvasView
-            canvasView.setDrawingData(drawingData);
+            if (drawingData != null) {
+                canvasView.setDrawingData(drawingData);
+            }
         }
     }
 }
+

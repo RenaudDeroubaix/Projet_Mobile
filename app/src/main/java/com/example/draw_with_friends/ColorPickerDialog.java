@@ -7,20 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-public class ColorPickerDialog extends Dialog implements View.OnClickListener {
+public class ColorPickerDialog extends Dialog {
 
-    private OnColorPickedListener colorPickedListener;
-    private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
+    private SeekBar redSeekBar;
+    private SeekBar greenSeekBar;
+    private SeekBar blueSeekBar;
     private View colorPreview;
+    private OnColorPickedListener listener;
+
+    public interface OnColorPickedListener {
+        void onColorPicked(int color);
+    }
 
     public ColorPickerDialog(Context context) {
         super(context);
-    }
-
-    public void setColorPickedListener(OnColorPickedListener listener) {
-        colorPickedListener = listener;
     }
 
     @Override
@@ -28,40 +29,33 @@ public class ColorPickerDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_color_picker);
 
-        setTitle("Pick a Color");
+        redSeekBar = findViewById(R.id.redSeekBar);
+        greenSeekBar = findViewById(R.id.greenSeekBar);
+        blueSeekBar = findViewById(R.id.blueSeekBar);
+        colorPreview = findViewById(R.id.colorPreview);
+        Button pickButton = findViewById(R.id.pickButton);
 
-        seekBarRed = findViewById(R.id.seekBarRed);
-        seekBarGreen = findViewById(R.id.seekBarGreen);
-        seekBarBlue = findViewById(R.id.seekBarBlue);
-        colorPreview = findViewById(R.id.color_preview);
+        redSeekBar.setOnSeekBarChangeListener(colorChangeListener);
+        greenSeekBar.setOnSeekBarChangeListener(colorChangeListener);
+        blueSeekBar.setOnSeekBarChangeListener(colorChangeListener);
 
-        Button btnOK = findViewById(R.id.btn_ok);
-        Button btnCancel = findViewById(R.id.btn_cancel);
-
-        btnOK.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-
-        // Set initial color preview
-        updateColorPreview();
-
-        // Set up SeekBar listeners
-        seekBarRed.setOnSeekBarChangeListener(seekBarChangeListener);
-        seekBarGreen.setOnSeekBarChangeListener(seekBarChangeListener);
-        seekBarBlue.setOnSeekBarChangeListener(seekBarChangeListener);
+        pickButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int color = Color.rgb(redSeekBar.getProgress(), greenSeekBar.getProgress(), blueSeekBar.getProgress());
+                if (listener != null) {
+                    listener.onColorPicked(color);
+                }
+                dismiss();
+            }
+        });
     }
 
-    private void updateColorPreview() {
-        int red = seekBarRed.getProgress();
-        int green = seekBarGreen.getProgress();
-        int blue = seekBarBlue.getProgress();
-        int color = Color.rgb(red, green, blue);
-        colorPreview.setBackgroundColor(color);
-    }
-
-    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    private final SeekBar.OnSeekBarChangeListener colorChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            updateColorPreview();
+            int color = Color.rgb(redSeekBar.getProgress(), greenSeekBar.getProgress(), blueSeekBar.getProgress());
+            colorPreview.setBackgroundColor(color);
         }
 
         @Override
@@ -71,18 +65,7 @@ public class ColorPickerDialog extends Dialog implements View.OnClickListener {
         public void onStopTrackingTouch(SeekBar seekBar) {}
     };
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_ok) {
-            if (colorPickedListener != null) {
-                int color = Color.rgb(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress());
-                colorPickedListener.onColorPicked(color);
-            }
-        }
-        dismiss();
-    }
-
-    public interface OnColorPickedListener {
-        void onColorPicked(int color);
+    public void setColorPickedListener(OnColorPickedListener listener) {
+        this.listener = listener;
     }
 }

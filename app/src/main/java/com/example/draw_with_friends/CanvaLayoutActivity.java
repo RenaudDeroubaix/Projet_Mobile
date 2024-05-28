@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 
 public class CanvaLayoutActivity extends AppCompatActivity {
 
     private CanvasView canvasView;
+    private String drawingName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,6 +17,12 @@ public class CanvaLayoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_canva);
 
         canvasView = findViewById(R.id.canvasView);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("drawingName")) {
+            drawingName = intent.getStringExtra("drawingName");
+            canvasView.setDrawingName(drawingName);
+        }
 
         Button colorPickerButton = findViewById(R.id.button_color_picker);
         colorPickerButton.setOnClickListener(new View.OnClickListener() {
@@ -30,12 +38,9 @@ public class CanvaLayoutActivity extends AppCompatActivity {
         colorPickerDialog.setColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int color) {
-                // Set the picked color to the canvas view's drawing color
                 canvasView.setDrawingColor(color);
             }
         });
         colorPickerDialog.show();
     }
 }
-
-
