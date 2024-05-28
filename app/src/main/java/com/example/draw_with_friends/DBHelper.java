@@ -7,6 +7,9 @@ import android.content.ContentValues;
 import java.util.ArrayList;
 import java.util.List;
 import android.util.Log;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -82,20 +85,27 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return drawings;
     }
-    public String getDrawingDataByName(String drawingName) {
-        String drawingData = null;
+
+    public List<String> getDrawingDataByName(String drawingName) {
+        List<String> drawingDataList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("drawings", null, "name = ?", new String[]{drawingName}, null, null, null);
+
         if (cursor != null) {
             int columnIndex = cursor.getColumnIndex("drawing_data");
             if (columnIndex != -1) {
-                drawingData = cursor.getString(cursor.getColumnIndex("drawing_data"));
-            }cursor.close();
+                while (cursor.moveToNext()) {
+                    String drawingData = cursor.getString(columnIndex);
+                    drawingDataList.add(drawingData);
+                }
+            }
+            cursor.close();
         }
 
         db.close();
-        return drawingData;
+        return drawingDataList;
     }
+
 
 
     @Override
@@ -116,7 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public List<String> getAllDrawingNames() {
-        List<String> drawingNames = new ArrayList<>();
+        Set<String> drawingNamesSet = new HashSet<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT name FROM drawings", null);
         if (cursor != null) {
@@ -125,15 +135,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 if (cursor.moveToFirst()) {
                     do {
                         String name = cursor.getString(columnIndex);
-                        drawingNames.add(name);
+                        drawingNamesSet.add(name);
                     } while (cursor.moveToNext());
                 }
             }
             cursor.close();
         }
         db.close();
-        return drawingNames;
+
+        // Convert the Set back to a List
+        return new ArrayList<>(drawingNamesSet);
     }
+
 
 
 

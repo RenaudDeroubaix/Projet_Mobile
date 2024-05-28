@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +59,8 @@ public class CanvasView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
+        System.out.println("String to Path: " + x);
+        System.out.println("String to Path: " + y);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -99,23 +102,91 @@ public class CanvasView extends View {
     public String getDrawingData() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < paths.size(); i++) {
-            stringBuilder.append(paths.get(i).toString()).append(",");
-            stringBuilder.append(colors.get(i)).append(";");
+            Path path = paths.get(i);
+            int color = colors.get(i);
+
+            PathMeasure pm = new PathMeasure(path, false);
+            float[] pos = new float[2];
+            boolean firstPoint = true;
+
+            while (true) {
+                pm.getPosTan(0, pos, null);
+                if (firstPoint) {
+                    stringBuilder.append(pos[0]).append(",").append(pos[1]);
+                    firstPoint = false;
+                } else {
+                    stringBuilder.append(" ").append(pos[0]).append(",").append(pos[1]);
+                }
+                while (pm.nextContour()) {
+                    pm.getPosTan(0, pos, null);
+                    stringBuilder.append(" ").append(pos[0]).append(",").append(pos[1]);
+                }
+                if (!pm.nextContour()) {
+                    break;
+                }
+            }
+            stringBuilder.append(":").append(color).append(";"); // Include color with each segment
         }
-        return stringBuilder.toString();
+
+        String drawingData = stringBuilder.toString();
+        System.out.println("Path to String: " + drawingData); // Log the path to string conversion
+        return drawingData;
     }
 
     public void setDrawingData(String drawingData) {
+        System.out.println("String to Path: " + drawingData); // Log the string to path conversion
         paths.clear();
         colors.clear();
-        String[] data = drawingData.split(";");
-        for (String d : data) {
-            String[] parts = d.split(",");
-            Path p = new Path();
-            // Convert parts[0] back to a Path object (this is just a placeholder)
-            paths.add(p);
-            colors.add(Integer.parseInt(parts[1]));
+
+        String[] pathSegments = drawingData.split(";");
+        for (String segment : pathSegments) {
+            if (segment.trim().isEmpty()) {
+                continue;
+            }
+
+            String[] pathAndColor = segment.split(":");
+            String[] points = pathAndColor[0].trim().split(" ");
+
+            // Read color from segment
+            currentColor= Integer.parseInt(pathAndColor[1]);
+
+            Path path = new Path();
+            for (int i = 0; i < points.length; i++) {
+                String[] coords = points[i].split(",");
+                float x = Float.parseFloat(coords[0]);
+                float y = Float.parseFloat(coords[1]);
+                System.out.println("String to Path: " + x);
+                System.out.println("String to Path: " + y);
+                if (i == 0) {
+                    path.moveTo(x, y);
+                } else {
+                    path.lineTo(x, y);
+                }
+            }
+
+            paths.add(path);
+            colors.add(currentColor);
         }
+
+        // Force redraw the view
         invalidate();
+    }
+
+
+
+    private Path stringToPath(String drawingData) {
+        Path path = new Path();
+        String[] segments = drawingData.split(" ");
+        for (int i = 0; i < segments.length; i++) {
+            String[] coords = segments[i].split(",");
+            float x = Float.parseFloat(coords[0]);
+            float y = Float.parseFloat(coords[1]);
+            if (i == 0) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
+        }
+        return path;
     }
 }

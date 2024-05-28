@@ -3,8 +3,7 @@ package com.example.draw_with_friends;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.draw_with_friends.CanvasView;
-import com.example.draw_with_friends.DBHelper;
+import java.util.List;
 
 public class DrawingActivity extends AppCompatActivity {
 
@@ -22,12 +21,16 @@ public class DrawingActivity extends AppCompatActivity {
             String drawingName = intent.getStringExtra("drawingName");
 
             DBHelper dbHelper = new DBHelper(this);
-            String drawingData = dbHelper.getDrawingDataByName(drawingName);
+            List<String> drawingDataList = dbHelper.getDrawingDataByName(drawingName);
 
-            if (drawingData != null) {
-                canvasView.setDrawingData(drawingData);
+            if (drawingDataList != null && !drawingDataList.isEmpty()) {
+                // Assuming you want to show all drawings with the same name, append them to canvasView
+                for (String drawingData : drawingDataList) {
+                    canvasView.setDrawingData(drawingData);
+                }
             }
         }
     }
 }
+
 

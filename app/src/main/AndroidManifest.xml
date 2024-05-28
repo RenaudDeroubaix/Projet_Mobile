@@ -12,5 +12,6 @@
         <activity android:name=".JoinDessinLayoutActivity" android:exported="true"/>
         <activity android:name=".MesDessinsLayoutActivity" android:exported="true"/>
         <activity android:name=".CanvaLayoutActivity" android:exported="true"/>
+        <activity android:name=".DrawingActivity" />
     </application>
 </manifest>
