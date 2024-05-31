@@ -22,6 +22,7 @@ public class CanvasView extends View {
     private int currentColor;
     private String drawingName;
     private DBHelper dbHelper;
+    private boolean isReadOnly;
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -57,10 +58,12 @@ public class CanvasView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (isReadOnly) {
+            return false; // Disable touch events if in read-only mode
+        }
+
         float x = event.getX();
         float y = event.getY();
-        System.out.println("String to Path: " + x);
-        System.out.println("String to Path: " + y);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -84,10 +87,18 @@ public class CanvasView extends View {
         return true;
     }
 
+    public void setReadOnly(boolean isReadOnly) {
+        this.isReadOnly = isReadOnly;
+    }
+
     public void setDrawingName(String drawingName) {
         this.drawingName = drawingName;
     }
 
+    public void setDrawingSize(int size) {
+        paint.setStrokeWidth(size);
+        invalidate();
+    }
     public void setDrawingColor(int color) {
         currentColor = color;
     }
@@ -133,7 +144,7 @@ public class CanvasView extends View {
 
 
     public void setDrawingData(String drawingData) {
-        System.out.println("String to Path: " + drawingData); // Log the string to path conversion
+        System.out.println("String to Path: " + drawingData);
         paths.clear();
         colors.clear();
 
@@ -164,12 +175,9 @@ public class CanvasView extends View {
             colors.add(color);
         }
 
-        // Force redraw the view
+
         invalidate();
     }
-
-
-
 
     private Path stringToPath(String drawingData) {
         Path path = new Path();

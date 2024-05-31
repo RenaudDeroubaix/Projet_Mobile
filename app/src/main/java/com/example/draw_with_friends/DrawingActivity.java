@@ -8,6 +8,7 @@ import java.util.List;
 public class DrawingActivity extends AppCompatActivity {
 
     private CanvasView canvasView;
+    private boolean isReadOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,7 @@ public class DrawingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("drawingName")) {
             String drawingName = intent.getStringExtra("drawingName");
+            isReadOnly = intent.getBooleanExtra("isReadOnly", false);
 
             DBHelper dbHelper = new DBHelper(this);
             List<String> drawingDataList = dbHelper.getDrawingDataByName(drawingName);
@@ -29,8 +31,9 @@ public class DrawingActivity extends AppCompatActivity {
                     canvasView.setDrawingData(drawingData);
                 }
             }
+
+            // Set read-only mode
+            canvasView.setReadOnly(isReadOnly);
         }
     }
 }
-
-

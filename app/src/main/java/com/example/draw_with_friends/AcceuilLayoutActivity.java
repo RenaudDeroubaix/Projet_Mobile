@@ -18,22 +18,24 @@ public class AcceuilLayoutActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acceuil);
+        int plan = getIntent().getIntExtra("plan", 0);
+        System.out.println("Plan VALUE: " + plan);
         Button buttonDessins= findViewById(R.id.buttonJoinDessins);
         buttonDessins.setOnClickListener(v -> {
             // Naviguer vers la nouvelle activité ConnectionLayoutActivity
             Intent intent = new Intent(AcceuilLayoutActivity.this, JoinDessinLayoutActivity.class);
+            intent.putExtra("plan", plan);
             startActivity(intent);
         });
         Button buttonGallerie = findViewById(R.id.buttonGallerie);
         buttonGallerie.setOnClickListener(v -> {
 
             // Naviguer vers la nouvelle activité ConnectionLayoutActivity
-            Intent intent = new Intent(AcceuilLayoutActivity.this, GallerieLayoutActivity.class);
+            Intent intent = new Intent(AcceuilLayoutActivity.this, ReadOnlyGalleryActivity.class);
             startActivity(intent);
         });
         // Récupérer l'adresse e-mail passée via l'intent
         String email = getIntent().getStringExtra("email");
-
         // Afficher l'adresse e-mail dans un TextView
         TextView emailTextView = findViewById(R.id.emailTextView);
         emailTextView.setText(email);

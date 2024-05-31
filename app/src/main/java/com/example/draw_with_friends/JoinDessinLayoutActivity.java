@@ -17,10 +17,11 @@ public class JoinDessinLayoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joindessin);
-
+        int plan = getIntent().getIntExtra("plan", 0);
+        System.out.println("Plan VALUE: " + plan);
         Button buttonGallery = findViewById(R.id.buttonGallery);
         buttonGallery.setOnClickListener(v -> {
-            Intent intent = new Intent(JoinDessinLayoutActivity.this, GallerieLayoutActivity.class);
+            Intent intent = new Intent(JoinDessinLayoutActivity.this, EditableGalleryActivity.class);
             startActivity(intent);
         });
 
@@ -31,6 +32,7 @@ public class JoinDessinLayoutActivity extends AppCompatActivity {
             if (!drawingName.isEmpty()) {
                 Intent intent = new Intent(JoinDessinLayoutActivity.this, CanvaLayoutActivity.class);
                 intent.putExtra("drawingName", drawingName);
+                intent.putExtra("plan", plan);
                 startActivity(intent);
             } else {
                 // Optionnel : Afficher un message si le nom est vide

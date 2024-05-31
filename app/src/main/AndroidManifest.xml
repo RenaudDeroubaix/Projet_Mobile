@@ -13,5 +13,8 @@
         <activity android:name=".MesDessinsLayoutActivity" android:exported="true"/>
         <activity android:name=".CanvaLayoutActivity" android:exported="true"/>
         <activity android:name=".DrawingActivity" />
+        <activity android:name=".ReadOnlyGalleryActivity" />
+        <activity android:name=".EditableGalleryActivity" />
+
     </application>
 </manifest>

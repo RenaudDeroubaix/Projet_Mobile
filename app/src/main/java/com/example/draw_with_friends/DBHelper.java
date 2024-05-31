@@ -42,7 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createUserTableQuery = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)";
+        String createUserTableQuery = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, planPremium INTEGER)";
         db.execSQL(createUserTableQuery);
 
         // Ajoutez une colonne pour le nom du dessin
@@ -115,11 +115,13 @@ public class DBHelper extends SQLiteOpenHelper {
         // Ici, vous pouvez mettre à jour le schéma de la base de données ou effectuer d'autres actions nécessaires
     }
 
-    public long insertUser(String username, String password) {
+
+    public long insertUser(String username, String password, int plan) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("username", username);
         values.put("password", password);
+        values.put("planPremium", plan);
         long newRowId = db.insert("users", null, values);
         db.close();
         return newRowId;
@@ -145,6 +147,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Convert the Set back to a List
         return new ArrayList<>(drawingNamesSet);
+    }
+    public boolean getPlanFromExistingUser(String username)
+    {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("users",  new String[]{"planPremium"}, "username = ?", new String[]{username}, null, null, null);
+
+        Integer content = 0;
+        if (cursor.moveToFirst()) {
+            content = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return (content == 1);
+
     }
 
 
