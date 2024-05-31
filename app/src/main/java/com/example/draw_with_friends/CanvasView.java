@@ -109,29 +109,28 @@ public class CanvasView extends View {
             float[] pos = new float[2];
             boolean firstPoint = true;
 
-            while (true) {
-                pm.getPosTan(0, pos, null);
-                if (firstPoint) {
-                    stringBuilder.append(pos[0]).append(",").append(pos[1]);
-                    firstPoint = false;
-                } else {
-                    stringBuilder.append(" ").append(pos[0]).append(",").append(pos[1]);
-                }
-                while (pm.nextContour()) {
-                    pm.getPosTan(0, pos, null);
-                    stringBuilder.append(" ").append(pos[0]).append(",").append(pos[1]);
+            while (pm.getLength() > 0) {
+                for (float distance = 0; distance < pm.getLength(); distance += 10) {
+                    pm.getPosTan(distance, pos, null);
+                    if (firstPoint) {
+                        stringBuilder.append(pos[0]).append(",").append(pos[1]);
+                        firstPoint = false;
+                    } else {
+                        stringBuilder.append(" ").append(pos[0]).append(",").append(pos[1]);
+                    }
                 }
                 if (!pm.nextContour()) {
                     break;
                 }
             }
-            stringBuilder.append(":").append(color).append(";"); // Include color with each segment
+            stringBuilder.append(":").append(color).append(";");
         }
 
         String drawingData = stringBuilder.toString();
-        System.out.println("Path to String: " + drawingData); // Log the path to string conversion
+        System.out.println("Path to String: " + drawingData);
         return drawingData;
     }
+
 
     public void setDrawingData(String drawingData) {
         System.out.println("String to Path: " + drawingData); // Log the string to path conversion
@@ -146,17 +145,14 @@ public class CanvasView extends View {
 
             String[] pathAndColor = segment.split(":");
             String[] points = pathAndColor[0].trim().split(" ");
-
-            // Read color from segment
-            currentColor= Integer.parseInt(pathAndColor[1]);
+            int color = Integer.parseInt(pathAndColor[1]);
 
             Path path = new Path();
             for (int i = 0; i < points.length; i++) {
                 String[] coords = points[i].split(",");
                 float x = Float.parseFloat(coords[0]);
                 float y = Float.parseFloat(coords[1]);
-                System.out.println("String to Path: " + x);
-                System.out.println("String to Path: " + y);
+                System.out.println("String to Path: " + x + "," + y);
                 if (i == 0) {
                     path.moveTo(x, y);
                 } else {
@@ -165,12 +161,13 @@ public class CanvasView extends View {
             }
 
             paths.add(path);
-            colors.add(currentColor);
+            colors.add(color);
         }
 
         // Force redraw the view
         invalidate();
     }
+
 
 
 
